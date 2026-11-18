@@ -1,0 +1,72 @@
+/* Custom styles for OtakuVerse */
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: #090d16;
+}
+
+/* Custom scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.4);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.8);
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Nav Button States */
+.nav-btn.active {
+  background-color: #8b5cf6;
+  color: #ffffff;
+  box-shadow: 0 4px 15px -3px rgba(139, 92, 246, 0.4);
+}
+
+.m-nav-btn.active {
+  background-color: #8b5cf6;
+  color: #ffffff;
+}
+
+/* Card Glow Effect */
+.media-card {
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.media-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px -5px rgba(139, 92, 246, 0.25);
+}
+
+.media-card:hover .poster-overlay {
+  opacity: 1;
+}
+
+.media-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Pulse animation for skeleton */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #161f33 25%, #1e293b 50%, #161f33 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}

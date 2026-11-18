@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OtakuVerse — Anime & K-Drama Hub</title>
+  <meta name="description" content="Discover, explore, and track trending Anime and Korean Dramas with OtakuVerse.">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              dark: '#0a0d14',
+              surface: '#111726',
+              card: '#161f33',
+              accent: '#8b5cf6',
+              pink: '#ec4899',
+              cyan: '#06b6d4',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-brand-dark text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-purple-600 selection:text-white">
+
+  <!-- Top Navigation Bar -->
+  <header class="sticky top-0 z-40 bg-brand-dark/80 backdrop-blur-md border-b border-slate-800/80 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4 py-3">
+      
+      <!-- Logo -->
+      <a href="#" onclick="switchCategory('all'); return false;" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-pink-500 to-amber-400 flex items-center justify-center text-white shadow-lg shadow-purple-500/25 group-hover:scale-105 transition-transform duration-300">
+          <i class="ph-bold ph-play text-xl ml-0.5"></i>
+        </div>
+        <div>
+          <span class="text-xl font-black tracking-tight text-white flex items-center gap-1">
+            Otaku<span class="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Verse</span>
+          </span>
+          <span class="text-[10px] tracking-widest text-slate-400 uppercase font-semibold block -mt-1">Anime & K-Drama</span>
+        </div>
+      </a>
+
+      <!-- Category Navigation Links (Desktop) -->
+      <nav class="hidden md:flex items-center gap-1 bg-slate-900/60 p-1.5 rounded-full border border-slate-800">
+        <button id="nav-all" onclick="switchCategory('all')" class="nav-btn active px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200">
+          🔥 Trending
+        </button>
+        <button id="nav-anime" onclick="switchCategory('anime')" class="nav-btn px-4 py-1.5 rounded-full text-xs font-semibold text-slate-400 hover:text-white transition-all duration-200">
+          🎌 Anime
+        </button>
+        <button id="nav-kdrama" onclick="switchCategory('kdrama')" class="nav-btn px-4 py-1.5 rounded-full text-xs font-semibold text-slate-400 hover:text-white transition-all duration-200">
+          🌸 K-Dramas
+        </button>
+        <button id="nav-watchlist" onclick="switchCategory('watchlist')" class="nav-btn px-4 py-1.5 rounded-full text-xs font-semibold text-slate-400 hover:text-white transition-all duration-200 flex items-center gap-1.5">
+          <i class="ph-bold ph-bookmark-simple"></i>
+          Watchlist
+          <span id="watchlist-badge" class="px-1.5 py-0.2 text-[10px] bg-purple-600/40 text-purple-300 rounded-full border border-purple-500/30">0</span>
+        </button>
+      </nav>
+
+      <!-- Search & Controls -->
+      <div class="flex items-center gap-3">
+        <!-- Search bar -->
+        <div class="relative w-44 sm:w-64 md:w-72">
+          <input 
+            type="text" 
+            id="search-input" 
+            placeholder="Search anime or k-dramas..." 
+            class="w-full bg-slate-900/90 text-sm text-slate-200 pl-9 pr-8 py-2 rounded-xl border border-slate-700/60 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all placeholder:text-slate-500"
+          >
+          <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300">
+            <i class="ph-bold ph-x-circle text-sm"></i>
+          </button>
+        </div>
+
+        <!-- Mobile Watchlist Icon -->
+        <button onclick="switchCategory('watchlist')" class="md:hidden relative p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white border border-slate-700">
+          <i class="ph-bold ph-bookmark-simple text-lg"></i>
+          <span id="mobile-watchlist-badge" class="absolute -top-1 -right-1 w-4 h-4 text-[9px] bg-purple-600 text-white rounded-full flex items-center justify-center font-bold">0</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Sub-Navigation -->
+    <div class="flex md:hidden px-4 pb-2.5 overflow-x-auto gap-2 scrollbar-none border-t border-slate-800/40 pt-2">
+      <button onclick="switchCategory('all')" id="m-nav-all" class="m-nav-btn active whitespace-nowrap px-3 py-1 text-xs rounded-lg font-medium">🔥 Trending</button>
+      <button onclick="switchCategory('anime')" id="m-nav-anime" class="m-nav-btn whitespace-nowrap px-3 py-1 text-xs rounded-lg font-medium text-slate-400">🎌 Anime</button>
+      <button onclick="switchCategory('kdrama')" id="m-nav-kdrama" class="m-nav-btn whitespace-nowrap px-3 py-1 text-xs rounded-lg font-medium text-slate-400">🌸 K-Dramas</button>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full space-y-8">
+    
+    <!-- Hero Spotlight Section -->
+    <section id="hero-spotlight" class="relative rounded-3xl overflow-hidden min-h-[380px] sm:min-h-[440px] flex items-end p-6 sm:p-10 border border-slate-800 bg-brand-surface shadow-2xl transition-all duration-700">
+      <div id="hero-backdrop" class="absolute inset-0 bg-cover bg-center transition-all duration-700 filter brightness-[0.45] scale-105"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/70 to-transparent"></div>
+      <div class="relative z-10 max-w-2xl space-y-3.5">
+        <div class="flex items-center gap-2">
+          <span id="hero-type" class="px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/40 backdrop-blur-sm">
+            Spotlight
+          </span>
+          <span id="hero-score" class="flex items-center gap-1 text-amber-400 text-xs font-bold bg-amber-400/10 px-2 py-0.5 rounded-md border border-amber-400/20">
+            <i class="ph-fill ph-star"></i> 9.2
+          </span>
+        </div>
+        <h1 id="hero-title" class="text-2xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight line-clamp-2">
+          Loading OtakuVerse Spotlight...
+        </h1>
+        <p id="hero-overview" class="text-sm sm:text-base text-slate-300 line-clamp-3 leading-relaxed font-normal">
+          Explore top rated Anime series and high-emotion Korean dramas curated daily for you.
+        </p>
+        <div class="flex items-center gap-3 pt-2">
+          <button id="hero-details-btn" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-sm shadow-lg shadow-purple-600/30 flex items-center gap-2 transition-transform active:scale-95">
+            <i class="ph-bold ph-info text-base"></i> View Details
+          </button>
+          <button id="hero-watchlist-btn" class="px-5 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 text-white font-semibold text-sm border border-slate-700 flex items-center gap-2 transition-colors">
+            <i class="ph-bold ph-plus text-base"></i> Add to List
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Genre & Filter Chips -->
+    <section class="flex items-center justify-between gap-4 flex-wrap pb-2 border-b border-slate-800/60">
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none w-full sm:w-auto" id="genre-pills">
+        <button onclick="filterGenre('all')" class="genre-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-white border border-slate-700 transition-all">All Genres</button>
+        <button onclick="filterGenre('Action')" class="genre-pill px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800 transition-all">Action</button>
+        <button onclick="filterGenre('Romance')" class="genre-pill px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800 transition-all">Romance</button>
+        <button onclick="filterGenre('Fantasy')" class="genre-pill px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800 transition-all">Fantasy</button>
+        <button onclick="filterGenre('Comedy')" class="genre-pill px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800 transition-all">Comedy</button>
+        <button onclick="filterGenre('Drama')" class="genre-pill px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800 transition-all">Drama</button>
+        <button onclick="filterGenre('Mystery')" class="genre-pill px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800 transition-all">Mystery</button>
+      </div>
+      <div class="text-xs text-slate-400 flex items-center gap-2 ml-auto">
+        <span id="items-count-label">Showing results</span>
+      </div>
+    </section>
+
+    <!-- Main Grid Section -->
+    <section>
+      <!-- Section Header -->
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <h2 id="section-title" class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+            🔥 Trending Now
+          </h2>
+          <p id="section-desc" class="text-xs text-slate-400 mt-0.5">Top-rated Anime and trending Korean Dramas this week</p>
+        </div>
+      </div>
+
+      <!-- Loading Skeleton -->
+      <div id="loading-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
+        <!-- 12 Skeletons generated by JS -->
+      </div>
+
+      <!-- Content Cards Grid -->
+      <div id="cards-grid" class="hidden grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
+      </div>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="hidden py-20 text-center space-y-4">
+        <div class="w-16 h-16 rounded-2xl bg-slate-800/80 border border-slate-700 flex items-center justify-center text-3xl mx-auto text-slate-400">
+          <i class="ph-duotone ph-magnifying-glass"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-lg font-bold text-white">No results found</h3>
+          <p class="text-sm text-slate-400 max-w-sm mx-auto">Try searching for a different anime or Korean drama name, or check your filters.</p>
+        </div>
+        <button onclick="resetFilters()" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-xs font-bold text-white transition-colors">
+          Reset View
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Show Details Modal -->
+  <div id="details-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="relative w-full max-w-3xl bg-brand-surface rounded-3xl border border-slate-800 shadow-2xl overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Close Button -->
+      <button onclick="closeDetailsModal()" class="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-black/60 hover:bg-black/90 text-slate-200 hover:text-white flex items-center justify-center border border-white/10 transition-colors">
+        <i class="ph-bold ph-x text-lg"></i>
+      </button>
+
+      <!-- Modal Backdrop / Trailer Header -->
+      <div id="modal-banner" class="relative h-48 sm:h-72 w-full bg-slate-900 overflow-hidden">
+        <img id="modal-backdrop-img" src="" alt="Backdrop" class="w-full h-full object-cover filter brightness-[0.55]">
+        <div class="absolute inset-0 bg-gradient-to-t from-brand-surface via-brand-surface/40 to-transparent"></div>
+        
+        <!-- Video Trailer Container (hidden initially) -->
+        <div id="modal-trailer-wrapper" class="hidden absolute inset-0 z-10 bg-black">
+          <iframe id="modal-trailer-frame" class="w-full h-full" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          <button onclick="stopTrailer()" class="absolute top-3 right-14 z-20 px-3 py-1 rounded-lg bg-black/70 text-xs text-white border border-white/20 hover:bg-black flex items-center gap-1">
+            <i class="ph-bold ph-x"></i> Close Video
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body Content -->
+      <div class="p-6 sm:p-8 space-y-6 relative -mt-12 z-10">
+        <div class="flex flex-col sm:flex-row gap-5 items-start">
+          <!-- Poster Thumbnail -->
+          <img id="modal-poster" src="" alt="Poster" class="w-28 sm:w-36 h-40 sm:h-52 object-cover rounded-2xl border-2 border-slate-700/80 shadow-2xl shrink-0 -mt-8 sm:-mt-16 bg-slate-800">
+          
+          <div class="space-y-2.5 flex-grow">
+            <div class="flex flex-wrap items-center gap-2">
+              <span id="modal-type-badge" class="px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                Anime
+              </span>
+              <span id="modal-year" class="text-xs text-slate-400 font-medium">2024</span>
+              <span id="modal-status" class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 font-medium">Releasing</span>
+              <span id="modal-score" class="flex items-center gap-1 text-amber-400 text-xs font-bold bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20 ml-auto">
+                <i class="ph-fill ph-star"></i> <span>8.8</span>
+              </span>
+            </div>
+            
+            <h2 id="modal-title" class="text-xl sm:text-2xl font-black text-white leading-snug">
+              Show Title
+            </h2>
+            <p id="modal-native-title" class="text-xs text-slate-400 italic">Native title</p>
+            
+            <!-- Genres -->
+            <div id="modal-genres" class="flex flex-wrap gap-1.5 pt-1">
+              <!-- Genre tags -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Synopsis / Plot -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Synopsis</h4>
+          <p id="modal-synopsis" class="text-sm text-slate-300 leading-relaxed max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+            Synopsis text goes here...
+          </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800/80">
+          <div class="flex items-center gap-3">
+            <button id="modal-trailer-btn" onclick="playTrailer()" class="px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-purple-600/25 transition-transform active:scale-95">
+              <i class="ph-fill ph-play text-sm"></i> Watch Trailer
+            </button>
+            <button id="modal-add-watchlist-btn" onclick="toggleModalWatchlist()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 flex items-center gap-2 transition-colors">
+              <i class="ph-bold ph-bookmark-simple text-sm"></i> <span>Add to Watchlist</span>
+            </button>
+          </div>
+          <a id="modal-external-link" href="#" target="_blank" rel="noopener noreferrer" class="text-xs text-slate-400 hover:text-purple-400 flex items-center gap-1 font-medium transition-colors">
+            Official Page <i class="ph-bold ph-arrow-square-out"></i>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-brand-surface/40 py-8 text-center text-xs text-slate-500 space-y-3 mt-12">
+    <div class="flex items-center justify-center gap-2 text-slate-400 font-semibold text-sm">
+      <span class="text-white">OtakuVerse</span> — Powered by <span class="text-pink-400">AniList</span> & <span class="text-cyan-400">TMDB</span>
+    </div>
+    <p class="max-w-md mx-auto text-[11px] px-4 leading-relaxed">
+      This product uses the TMDB API but is not endorsed or certified by TMDB. Anime metadata is powered by AniList. All rights belong to their respective creators.
+    </p>
+    <div class="text-[10px] text-slate-600">
+      Built with ❤️ for Anime & K-Drama fans worldwide.
+    </div>
+  </footer>
+
+  <!-- App Logic Script -->
+  <script src="app.js"></script>
+</body>
+</html>
